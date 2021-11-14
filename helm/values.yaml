@@ -1,0 +1,101 @@
+# Default values for jenkins.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+#jenkins/jenkins:2.263.3
+#alpine:3.10.2
+initContainerImage: "alpine:3.10.2"
+
+replicaCount: 1
+imagePullSecrets:
+  name: 
+image:
+  repository: prgbaw/myrepo
+  tag: jenkins-controller
+  pullPolicy: Always
+
+  resources:
+    limits:
+      cpu: "500m"
+      memory: "2048Mi"
+
+master:
+  adminUser: "admin"
+  adminPassword: "password"
+
+service:
+  name: jenkins
+  type: LoadBalancer
+  ## Whitelist the IPs that can access Jenkins
+  loadBalancerSourceRanges:
+  - 0.0.0.0/0
+  externalPort: 8080
+  internalPort: 8080
+## Make sure the javaOps and resources are aligned to avoid conflicts
+javaOpts: "-Xms512m -Xmx1g"
+resources:
+  requests:
+    cpu: 100m
+    memory: 512Mi
+  limits:
+    memory: 1Gi
+storage:
+  persistence:
+    enabled: true
+    accessMode: ReadWriteOnce
+    claim: jenkins-claim
+  capacity: 5Gi
+  
+jnlp:
+  service:
+    externalPort: 50000
+    internalPort: 50000
+
+
+ # List of plugins to be install during Jenkins controller start
+installPlugins:
+  - kubernetes:1.27.6
+  - workflow-aggregator:2.6
+  - git:4.5.2
+  - configuration-as-code:1.47
+  - credentials:2.3.15
+  - ssh-credentials:1.18.1
+  - authentication-tokens:1.4
+  - plain-credentials:1.7
+  - credentials-binding:1.24
+  - jsch:0.1.55.2
+  - git-client:3.6.0
+  - git-server:1.9
+  - git:4.5.2
+  - kubernetes-credentials:0.8.0
+  - pipeline-model-extensions:1.8.3
+  - pipeline-input-step:2.12
+  - pipeline-graph-analysis:1.10
+  - workflow-cps-global-lib:2.17
+  - pipeline-model-definition:1.8.3
+  - pipeline-rest-api:2.19
+  - pipeline-stage-view:2.19
+
+controller:
+  initializeOnce: true
+  componentName:
+  jenkinsWar: "/usr/share/jenkins/jenkins.war"
+  jenkinsHome: "/var/jenkins_home"
+  jenkinsRef: "/usr/share/jenkins/ref"
+  sidecars:
+    configAutoReload:
+      enabled: true
+      image: kiwigrid/k8s-sidecar:0.1.275
+      imagePullPolicy: IfNotPresent
+      resources: 
+            limits:
+              cpu: 100m
+              memory: 100Mi
+            requests:
+              cpu: 50m
+              memory: 50Mi
+        
+      # How many connection-related errors to retry on
+      reqRetryConnect: 10
+      sshTcpPort: 1044
+      # folder in the pod that should hold the collected dashboards:
+      folder: "/var/jenkins_home/casc_configs"
