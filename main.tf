@@ -36,8 +36,8 @@ module "eks" {
   ]
   worker_additional_security_group_ids = [aws_security_group.all_worker_mgmt.id]
   # windows workaround
-  wait_for_cluster_interpreter = ["C:/Program Files/Git/bin/sh.exe", "-c"]
-  wait_for_cluster_cmd         = "until curl -sk $ENDPOINT >/dev/null; do sleep 4; done"
+  #wait_for_cluster_interpreter = ["C:/Program Files/Git/bin/sh.exe", "-c"]
+  #wait_for_cluster_cmd         = "until curl -sk $ENDPOINT >/dev/null; do sleep 4; done"
   #
   map_roles                            = var.map_roles
   map_users                            = var.map_users
