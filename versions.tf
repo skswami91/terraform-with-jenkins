@@ -25,6 +25,11 @@ terraform {
       version = "2.2.0"
     }
 
+#    k8s = {
+#      version = ">= 0.8.0"
+#      source  = "banzaicloud/k8s"
+#    }
+
     kubernetes = {
       source  = "hashicorp/kubernetes"
       version = ">= 2.0.1"
