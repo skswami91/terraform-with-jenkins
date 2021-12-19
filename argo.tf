@@ -2,14 +2,22 @@
 # Example : Simple Argo CD installation
 # ----------------------------------------------------------------------------------------------------------------------
 
-module "argo_cd" {
-  provider "k8s" {
-    version = ">= 0.8.0"
-    source  = "banzaicloud/k8s"
-}
+module "argocd" {
+  source = "git::https://github.com/lablabs/terraform-helm-argocd.git?ref=v0.3.0"
 
-  source = "git::https://github.com/runoncloud/terraform-kubernetes-argocd.git?ref=v1.0.0"
+  self_managed_use_helm = true
 
-  namespace       = "argocd"
-  argo_cd_version = "1.5.5"
+  # Example how to pass values
+  values = yamlencode({
+    "global" : {
+      "image" : {
+        "imagePullPolicy" : "Always"
+      }
+    }
+  })
+
+  # Example how to pass overriding parameters
+  # settings = {
+  #   "global.image.imagePullPolicy": "IfNotPresent"
+  # }
 }
