@@ -16,7 +16,7 @@ data "aws_availability_zones" "available" {
 module "eks" {
   source          = "terraform-aws-modules/eks/aws"
   cluster_name    = local.cluster_name
-  cluster_version = "1.18"
+  cluster_version = "1.20"
   subnets         = module.vpc.private_subnets
   cluster_endpoint_private_access = true
   vpc_id = module.vpc.vpc_id
